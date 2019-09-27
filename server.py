@@ -40,7 +40,7 @@ while True :
         header = parts[2] + ' 404 Not Found\r\n'
         content = "<h1>Error 404 - File not found.</h1>".encode('utf8')
     
-    res = header.encode('utf8')
+    res = header.encode('utf-8')
     res += '\r\n'.encode('utf-8')
     res += content
     res += '\r\n'.encode('utf-8')
