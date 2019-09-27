@@ -10,6 +10,20 @@ serv_socket.listen(1)
 
 print('Server rodando')
 
+def getType(arq):
+    tp = arq.split('.')[1]
+    if tp == 'txt' :
+        ct = 'text/plain'
+    elif tp == 'png' :
+        ct = 'image/png'
+    elif tp == 'pdf' :
+        ct = 'application/pdf'
+    else :
+        ct = ''
+
+    return ct
+
+
 while True :
     con, cliente = serv_socket.accept()
     req = con.recv(1024).decode('utf8')
@@ -17,10 +31,19 @@ while True :
     try:
         flname = './arquivos' + parts[1]
         fl = open(flname, 'rb')
-        arq = fl.read()
-        con.send(arq)
+        content = fl.read()
         fl.close()
+
+        header = parts[2] + " 200 OK\r\n"
+        header += "Content-Type: " + getType(parts[1]) + "; charset=utf-8\r\n"
     except:
-        err = "Arquivo nao encontrado"
-        con.send(err.encode('utf8'))
+        header = parts[2] + ' 404 Not Found\r\n'
+        content = "<h1>Error 404 - File not found.</h1>".encode('utf8')
+    
+    res = header.encode('utf8')
+    res += '\r\n'.encode('utf-8')
+    res += content
+    res += '\r\n'.encode('utf-8')
+
+    con.send(res)
     con.close()
