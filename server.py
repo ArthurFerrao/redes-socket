@@ -29,7 +29,7 @@ while True :
     req = con.recv(1024).decode('utf8')
     parts = req.split()
     try:
-        flname = './arquivos' + parts[1]
+        flname = '.' + parts[1]
         fl = open(flname, 'rb')
         content = fl.read()
         fl.close()
