@@ -1,4 +1,6 @@
 from socket import *
+import sender
+from time import sleep
 
 port = 3001 
 # Create a UDP socket
@@ -8,7 +10,7 @@ sock.bind(('localhost', port))
 print('Server rodando')
 
 while True :
-    data, addr = sock.recvfrom(1024)
+    data, addr = sender.receive_and_send_ack(sock)
     op, x, y = data.decode('utf-8').split()
 
     x = int(x)
@@ -28,5 +30,4 @@ while True :
     elif (op == 'EXP'):
         res = x ** y
 
-
-    sock.sendto(str(res).encode('utf-8'), addr)
+    sender.send_data(sock, str(res).encode('utf-8'), addr)
